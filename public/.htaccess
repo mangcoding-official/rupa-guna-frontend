@@ -1,0 +1,13 @@
+# Apache / Cloudways: serve the prerendered page for each route, fall back to the SPA shell.
+DirectorySlash Off
+RewriteEngine On
+
+# /about → /about/index.html (prerendered head for crawlers), without a trailing-slash redirect.
+RewriteCond %{REQUEST_URI} !/$
+RewriteCond %{DOCUMENT_ROOT}%{REQUEST_URI}/index.html -f
+RewriteRule ^(.*)$ /$1/index.html [L]
+
+# Anything else that is not a real file → SPA shell (client-side routing, 404 page).
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^ /index.html [L]

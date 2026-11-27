@@ -1,0 +1,12 @@
+{
+  "name": "Rupa Guna",
+  "short_name": "Rupa Guna",
+  "icons": [
+    { "src": "/icon-192.png?v=2", "sizes": "192x192", "type": "image/png" },
+    { "src": "/icon-512.png?v=2", "sizes": "512x512", "type": "image/png" },
+    { "src": "/icon-maskable-512.png?v=2", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "theme_color": "#ffffff",
+  "background_color": "#ffffff",
+  "display": "browser"
+}

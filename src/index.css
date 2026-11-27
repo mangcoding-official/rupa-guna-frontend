@@ -1,0 +1,171 @@
+@import 'tailwindcss';
+
+/*
+ * Design tokens from Figma "Rupa Guna" → page `web` (Landing page 183:4619, Home · Mobile 390 206:760).
+ */
+@theme {
+  /* Desktop layout (330px label column + content) starts at 1200px; 768–1199 uses the tablet layout. */
+  --breakpoint-lg: 75rem;
+  /* Boldonse for display, Inter at optical size 32 ("Inter Display") for text */
+  --font-display: 'Boldonse', 'Arial Black', sans-serif;
+  --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+
+  --color-navy: #000436; /* primary text */
+  --color-blue: #4671ff; /* brand / active / footer */
+  --color-label: #4d5378; /* section labels */
+  --color-muted: #c7c7c7; /* inactive service meta */
+  --color-muted-2: #c2c2c7; /* card meta */
+  --color-ink-soft: #2f2f2f; /* card title */
+  --color-gray: #707070; /* FAQ plus */
+  --color-gray-2: #6b6b6b; /* testimonial role */
+  --color-line: #e6e6e6;
+  --color-surface: #f6f6f6; /* mobile service cards, stat cards */
+  --color-stack-1: #eeeeee;
+  --color-stack-2: #dddddd;
+
+  --container-site: 90rem; /* 1440 frame */
+  --radius-card: 1rem; /* 16px */
+  --radius-panel: 1.5rem; /* 24px */
+}
+
+@layer base {
+  /* Height of the sticky header bar (h-16 / lg:h-24). Pinned or full-height sections subtract it,
+     and in-page anchors stop below it. */
+  :root {
+    --header-h: 4rem;
+  }
+  @media (width >= 75rem) {
+    :root {
+      --header-h: 6rem;
+    }
+  }
+  html {
+    -webkit-text-size-adjust: 100%;
+    scroll-padding-top: var(--header-h);
+    /* Scroll locks (page transition, menu, dialogs) hide the scrollbar; keep its space reserved so
+       the page does not widen and then snap back sideways when the lock ends (classic scrollbars). */
+    scrollbar-gutter: stable;
+  }
+  /* Lenis marks itself stopped with overflow: clip, which ignores scrollbar-gutter; hidden keeps it. */
+  html.lenis.lenis-stopped {
+    overflow: hidden;
+  }
+  body {
+    @apply bg-white font-sans text-navy antialiased;
+    /* Inter Display = Inter's display optical size; -4% tracking as in the design */
+    font-variation-settings: 'opsz' 32;
+    letter-spacing: -0.04em;
+  }
+  ::selection {
+    @apply bg-blue text-white;
+  }
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-blue;
+  }
+  /* Tailwind v4 resets buttons to the default cursor; everything clickable shows a pointer here. */
+  button:not(:disabled),
+  [role='button']:not(:disabled),
+  summary,
+  label[for],
+  select {
+    cursor: pointer;
+  }
+  button:disabled {
+    cursor: not-allowed;
+  }
+}
+
+/* Preloader: lock scroll and keep intro-only elements hidden until it hands off to the hero */
+html.is-preloading {
+  overflow: hidden;
+}
+html.is-preloading [data-intro] {
+  visibility: hidden;
+}
+
+/* Page gutter: 20px on mobile, 60px on desktop (1440 frame) */
+@utility container-site {
+  @apply mx-auto w-full max-w-(--container-site) px-5 lg:px-15;
+}
+
+/* Two-column section grid: label column (60→390) + content column (390→1380) */
+@utility section-grid {
+  @apply grid grid-cols-1 gap-y-3 lg:grid-cols-[330px_minmax(0,1fr)];
+}
+
+/* Boldonse is always set in caps with 140% line height */
+@utility display {
+  @apply font-display uppercase leading-[1.4] tracking-normal;
+  font-variation-settings: normal;
+}
+
+@utility label {
+  @apply text-sm text-label;
+}
+
+@utility link-underline {
+  @apply underline decoration-current/30 underline-offset-4 transition-colors hover:decoration-current;
+}
+
+/* Rich text from Strapi Blocks */
+.prose-rg {
+  @apply text-lg leading-[1.45] text-label;
+}
+.prose-rg > * + * {
+  @apply mt-5;
+}
+.prose-rg h2,
+.prose-rg h3 {
+  @apply mt-10 text-2xl font-medium text-navy;
+}
+.prose-rg a {
+  @apply text-navy link-underline;
+}
+.prose-rg ul {
+  @apply list-disc pl-6;
+}
+.prose-rg ol {
+  @apply list-decimal pl-6;
+}
+.prose-rg blockquote {
+  @apply text-3xl leading-tight text-blue;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Horizontal scrollers (filter chips) without a visible scrollbar */
+@utility no-scrollbar {
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/*
+ * Section tone (home): `.tone-dark` inverts a section's colour tokens (navy ⇄ white), and every
+ * descendant using them (text-navy, bg-surface, …) follows. Plain custom properties, scoped to the
+ * section: nothing is registered globally, so no other part of the page can be affected.
+ */
+.tone {
+  /* Inherited text colour is resolved here, so it follows the tokens too. */
+  color: var(--color-navy);
+}
+.tone-dark {
+  --color-navy: #ffffff;
+  --color-white: #000436;
+  --color-label: #9a9cb8;
+  --color-ink-soft: #ffffff;
+  --color-muted-2: #8b8eab;
+  --color-surface: #141850;
+  --color-stack-1: #1d2258;
+  --color-stack-2: #2c3168;
+  --color-gray: #b9bbd0;
+  --color-line: #2a2e5c;
+}
